@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.bookshelf.domain.Category;
@@ -39,9 +40,12 @@ public class CategoryService {
 		return repository.save(obj);
 	}
 
-	public void delete(Integer id) throws ObjectNotFoundException {
-		// TODO Auto-generated method stub
+	public void delete(Integer id) throws ObjectNotFoundException, com.bookshelf.service.exceptions.DataIntegrityViolationException {
 		findById(id);
-		repository.deleteById(id);
+		try {
+			repository.deleteById(id);
+		} catch (DataIntegrityViolationException e) {
+			throw new com.bookshelf.service.exceptions.DataIntegrityViolationException("A categoria não pode ser deletada! Possui livros associados");
+		}
 	}
 }

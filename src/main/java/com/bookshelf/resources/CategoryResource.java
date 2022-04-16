@@ -19,6 +19,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.bookshelf.domain.Category;
 import com.bookshelf.dtos.CategoryDTO;
 import com.bookshelf.service.CategoryService;
+import com.bookshelf.service.exceptions.DataIntegrityViolationException;
 import com.bookshelf.service.exceptions.ObjectNotFoundException;
 
 @RestController
@@ -56,7 +57,7 @@ public class CategoryResource {
 	}
 	
 	@DeleteMapping(value = "/{id}")
-	public ResponseEntity<Void> delete(@PathVariable Integer id) throws ObjectNotFoundException{
+	public ResponseEntity<Void> delete(@PathVariable Integer id) throws ObjectNotFoundException, DataIntegrityViolationException{
 		service.delete(id);
 		return ResponseEntity.noContent().build();
 	}
