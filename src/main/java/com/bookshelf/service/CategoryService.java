@@ -38,4 +38,10 @@ public class CategoryService {
 		obj.setDescription(objDto.getDescription());
 		return repository.save(obj);
 	}
+
+	public void delete(Integer id) throws ObjectNotFoundException {
+		// TODO Auto-generated method stub
+		findById(id);
+		repository.deleteById(id);
+	}
 }
