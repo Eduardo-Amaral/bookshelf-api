@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bookshelf.domain.Category;
+import com.bookshelf.dtos.CategoryDTO;
 import com.bookshelf.repositories.CategoryRepository;
 import com.bookshelf.service.exceptions.ObjectNotFoundException;
 
@@ -28,6 +29,13 @@ public class CategoryService {
 	
 	public Category create(Category obj) {
 		obj.setId(null);
+		return repository.save(obj);
+	}
+
+	public Category update(Integer id, CategoryDTO objDto) throws ObjectNotFoundException {
+		Category obj = findById(id);
+		obj.setName(objDto.getName());
+		obj.setDescription(objDto.getDescription());
 		return repository.save(obj);
 	}
 }
