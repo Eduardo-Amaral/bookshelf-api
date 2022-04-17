@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bookshelf.domain.Book;
+import com.bookshelf.domain.Category;
 import com.bookshelf.repositories.BookRepository;
 import com.bookshelf.service.exceptions.ObjectNotFoundException;
 
@@ -40,5 +41,12 @@ public class BookService {
 		newObj.setTitle(obj.getTitle());
 		newObj.setAuthorName(obj.getAuthorName());
 		newObj.setText(obj.getText());
+	}
+
+	public Book create(Integer id_cat, Book obj) throws ObjectNotFoundException {
+		obj.setId(null);
+		Category cat = categoryService.findById(id_cat);
+		obj.setCategory(cat);
+		return repository.save(obj);
 	}
 }
