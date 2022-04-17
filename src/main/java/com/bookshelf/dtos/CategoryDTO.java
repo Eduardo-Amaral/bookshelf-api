@@ -2,13 +2,22 @@ package com.bookshelf.dtos;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.NotEmpty;
+
+import org.hibernate.validator.constraints.Length;
+
 import com.bookshelf.domain.Category;
 
 public class CategoryDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private Integer id;
+	
+	@NotEmpty(message = "Campo NOME é requerido")
+	@Length(min = 3, max = 50, message = "O campo NOME deve ter entre 3 e 200 caracteres ")
 	private String name;
+	@NotEmpty(message = "Campo DESCRIÇÃO é requerido")
+	@Length(min = 3, max = 200, message = "O campo DESCRIÇÃO deve ter entre 3 e 200 caracteres ")
 	private String description;
 
 	public CategoryDTO() {

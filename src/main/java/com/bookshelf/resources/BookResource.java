@@ -4,8 +4,11 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -24,6 +27,7 @@ import com.bookshelf.service.BookService;
 import com.bookshelf.service.exceptions.DataIntegrityViolationException;
 import com.bookshelf.service.exceptions.ObjectNotFoundException;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping(value = "/books")
 public class BookResource {
@@ -46,21 +50,22 @@ public class BookResource {
 	}
 
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<Book> update(@PathVariable Integer id, @RequestBody Book obj) throws ObjectNotFoundException {
+	public ResponseEntity<Book> update(@PathVariable Integer id, @Valid @RequestBody Book obj)
+			throws ObjectNotFoundException {
 		Book newObj = service.update(id, obj);
 		return ResponseEntity.ok().body(newObj);
 	}
 
 	@PatchMapping(value = "/{id}")
-	public ResponseEntity<Book> updatePatch(@PathVariable Integer id, @RequestBody Book obj)
+	public ResponseEntity<Book> updatePatch(@PathVariable Integer id, @Valid @RequestBody Book obj)
 			throws ObjectNotFoundException {
 		Book newObj = service.update(id, obj);
 		return ResponseEntity.ok().body(newObj);
 	}
 
 	@PostMapping
-	public ResponseEntity<Book> create(@RequestParam(value = "category", defaultValue = "0") Integer id_cat,
-			@RequestBody Book obj) throws ObjectNotFoundException {
+	public ResponseEntity<Book> create( @RequestParam(value = "category", defaultValue = "0") Integer id_cat,
+			@Valid @RequestBody Book obj) throws ObjectNotFoundException {
 		Book newObj = service.create(id_cat, obj);
 		URI uri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/books/{id}")
 				.buildAndExpand(newObj.getId()).toUri();

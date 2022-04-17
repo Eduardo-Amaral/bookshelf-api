@@ -1,26 +1,33 @@
 package com.bookshelf.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.validation.constraints.NotEmpty;
+
+import org.hibernate.validator.constraints.Length;
+
 @Entity
 public class Category implements Serializable {
-    /**
-	 * 
-	 */
+    
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
+	
+	@NotEmpty(message = "Campo NOME é requerido")
+	@Length(min = 3, max = 50, message = "O campo NOME deve ter entre 3 e 50 caracteres")
     private String name;
+	
+	@NotEmpty(message = "Campo DESCRIÇÃO é requerido")
+	@Length(min = 3, max = 200, message = "O campo DESCRIÇÃO deve ter entre 3 e 200 caracteres ")
     private String description;
 
     @OneToMany(mappedBy = "category")
