@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +21,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.bookshelf.domain.Book;
 import com.bookshelf.dtos.BookDTO;
 import com.bookshelf.service.BookService;
+import com.bookshelf.service.exceptions.DataIntegrityViolationException;
 import com.bookshelf.service.exceptions.ObjectNotFoundException;
 
 @RestController
@@ -34,31 +36,42 @@ public class BookResource {
 		Book obj = service.findById(id);
 		return ResponseEntity.ok().body(obj);
 	}
-	
+
 	@GetMapping
-	public ResponseEntity<List<BookDTO>> findAll(@RequestParam(value = "category", defaultValue = "0") Integer id_cat) throws ObjectNotFoundException{
+	public ResponseEntity<List<BookDTO>> findAll(@RequestParam(value = "category", defaultValue = "0") Integer id_cat)
+			throws ObjectNotFoundException {
 		List<Book> list = service.findAll(id_cat);
 		List<BookDTO> listDTO = list.stream().map(obj -> new BookDTO(obj)).collect(Collectors.toList());
 		return ResponseEntity.ok().body(listDTO);
 	}
-	
+
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<Book> update(@PathVariable Integer id, @RequestBody Book obj) throws ObjectNotFoundException{
+	public ResponseEntity<Book> update(@PathVariable Integer id, @RequestBody Book obj) throws ObjectNotFoundException {
 		Book newObj = service.update(id, obj);
 		return ResponseEntity.ok().body(newObj);
 	}
-	
+
 	@PatchMapping(value = "/{id}")
-	public ResponseEntity<Book> updatePatch(@PathVariable Integer id, @RequestBody Book obj) throws ObjectNotFoundException{
+	public ResponseEntity<Book> updatePatch(@PathVariable Integer id, @RequestBody Book obj)
+			throws ObjectNotFoundException {
 		Book newObj = service.update(id, obj);
 		return ResponseEntity.ok().body(newObj);
 	}
-	
+
 	@PostMapping
-	public ResponseEntity<Book> create(@RequestParam(value = "category", defaultValue = "0") Integer id_cat, @RequestBody Book obj) throws ObjectNotFoundException{
+	public ResponseEntity<Book> create(@RequestParam(value = "category", defaultValue = "0") Integer id_cat,
+			@RequestBody Book obj) throws ObjectNotFoundException {
 		Book newObj = service.create(id_cat, obj);
-		URI uri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/books/{id}").buildAndExpand(newObj.getId()).toUri();
+		URI uri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/books/{id}")
+				.buildAndExpand(newObj.getId()).toUri();
 		return ResponseEntity.created(uri).build();
-		
 	}
+
+	@DeleteMapping(value = "/{id}")
+	public ResponseEntity<Void> delete(@PathVariable Integer id)
+			throws ObjectNotFoundException, DataIntegrityViolationException {
+		service.delete(id);
+		return ResponseEntity.noContent().build();
+	}
+
 }

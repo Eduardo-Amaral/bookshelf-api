@@ -16,13 +16,14 @@ public class BookService {
 
 	@Autowired
 	private BookRepository repository;
-	
+
 	@Autowired
 	private CategoryService categoryService;
 
 	public Book findById(Integer id) throws ObjectNotFoundException {
 		Optional<Book> obj = repository.findById(id);
-		return obj.orElseThrow(()-> new ObjectNotFoundException("Objeto não encontrado! Id:" + id + " Tipo: " + Book.class.getName()));
+		return obj.orElseThrow(() -> new ObjectNotFoundException(
+				"Objeto não encontrado! Id:" + id + " Tipo: " + Book.class.getName()));
 
 	}
 
@@ -48,5 +49,10 @@ public class BookService {
 		Category cat = categoryService.findById(id_cat);
 		obj.setCategory(cat);
 		return repository.save(obj);
+	}
+
+	public void delete(Integer id) throws ObjectNotFoundException {
+		Book obj = findById(id);
+		repository.delete(obj);
 	}
 }
